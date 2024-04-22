@@ -64,10 +64,23 @@ let tasks = [
   priority: 0    
     } ];
     
-    
+function applyEventlisteners(){
+  let btns = document.querySelectorAll(".mybtn");
+btns.forEach((element, i) => {
+  element.addEventListener("click", function () {
+    if (tasks[i].priority < 5){
+      tasks[i].priority ++;
+      document.querySelectorAll(".priority")[i].innerHTML=+ tasks[i].priority;
+     priorityColor(document.querySelectorAll(".priority")[i], tasks[i].priority);
+   }
+    })
+  })};  
+
 function printResult() {
-for (let val of tasks){
-  document.getElementById("result").innerHTML+=`
+  let resultContainer = document.getElementById("result");
+  resultContainer.innerHTML = "";
+  for (let val of tasks) {
+      resultContainer.innerHTML += `
   <div class="card  mb-2 ">
     <h5 class="card-title mt-1">${val.taskName}</h5>
     <img src="${val.image}" class="card-img-top" alt="...">
@@ -81,20 +94,11 @@ for (let val of tasks){
       <button class="btn btn-outline-danger">Delete &#10005;</button>
     </div>
   </div>`;
+
+  applyEventlisteners();
+ 
 }}
-printResult();
 
-let btns = document.querySelectorAll(".mybtn");
-
-btns.forEach((element, i) => {
-  element.addEventListener("click", function () {
-    if (tasks[i].priority < 5){
-      tasks[i].priority ++;
-      document.querySelectorAll(".priority")[i].innerHTML=+ tasks[i].priority;
-     priorityColor(document.querySelectorAll(".priority")[i], tasks[i].priority);
-   }
-    })
-  });
 
   function priorityColor(priorityBtn, priority) {
     priorityBtn.classList.remove('btn-light', 'btn-warning', 'btn-danger');
@@ -110,10 +114,17 @@ btns.forEach((element, i) => {
         priorityBtn.classList.add('bg-danger'); 
     }}
 
-  function sortByPriority(){
-  let sorted=tasks.sort((a, b) => b.priority - a.priority);
-  document.getElementById("result").innerHTML = "";
-  printResult();
-}
+    function sortByPriority() {
+      tasks.sort((a, b) => b.priority - a.priority);
+      printResult();
+      document.querySelectorAll('.priority').forEach((priorityBtn, i) => {
+          priorityColor(priorityBtn, tasks[i].priority);
+      });
+      
+  }
 
+
+printResult();
 document.getElementById("sort").addEventListener("click", sortByPriority);
+
+
